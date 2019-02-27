@@ -11,9 +11,9 @@ public class Arbiter {
 
     // In the following arrays, indices {0, 1, 2} correspond to data for 
     // players 1, 2 and 3 respectively. 
-    private Bot[] players; // the bots that will be acting for the players
-    private int[] lastRound; // actions chosen by players on last round
-    private int[] score; // total scores of each player thus far
+    public Bot[] players; // the bots that will be acting for the players
+    public int[] lastRound; // actions chosen by players on last round
+    public int[] score; // total scores of each player thus far
     
     /** Intializes a new match between three specified bots.
       * 

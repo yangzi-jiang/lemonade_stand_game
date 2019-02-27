@@ -1,3 +1,5 @@
+import java.util.HashMap;
+import java.util.*;
 
 /** Program that runs a Lemonade Stand tournament between the three named
   * players.
@@ -5,7 +7,11 @@
   * @author RR
   */
 public class Tournament {
- 
+	
+	public static HashMap<Integer, Integer> player1Moves = new HashMap<Integer, Integer>(); 
+	public static HashMap<Integer, Integer> player2Moves = new HashMap<Integer, Integer>();
+	public static HashMap<Integer, Integer> player3Moves = new HashMap<Integer, Integer>();
+	
     public static void main(String[] args) {
         if (args.length != 4) {
             System.out.print("Usage: java Tournament <player1> <player2> ");
@@ -47,9 +53,20 @@ public class Tournament {
         
         // Run tournament
         Arbiter judge = new Arbiter(players[0], players[1], players[2]);
-        for (int i = 0; i < numRounds; i++)
+        for (int i = 0; i < numRounds; i++) {
             judge.runRound();
+        	player1Moves.put(i, judge.lastRound[0]);
+        	player2Moves.put(i, judge.lastRound[1]);
+        	player3Moves.put(i, judge.lastRound[2]);
+        	System.out.println("player 1 last moves are: " + judge.lastRound[0]);
+        	System.out.println("player 2 last moves are: " + judge.lastRound[1]);
+        	System.out.println("player 3 last moves are: " + judge.lastRound[2]);
+        }
         
+        System.out.println("player 1 should made 1000 moves: " + player1Moves.size());
+        System.out.println("player 2 should made 1000 moves: " + player2Moves.size());
+        System.out.println("player 3 should made 1000 moves: " + player3Moves.size());
+        	
         // Print mean scores
         int[] scores = judge.getCurrentScore();
         for (int i = 0; i < 3; i++)
