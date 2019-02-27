@@ -40,10 +40,6 @@ public class Arbiter {
     public int[] getCurrentScore() {
         return Arrays.copyOf(this.score, this.score.length);
     }
-    
-    public int[] getLastRound(){
-        return Arrays.copyOf(this.lastRound, this.lastRound.length);
-    }
 
     /** Scores the current round from the perspective of the first player.
       * 

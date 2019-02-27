@@ -13,23 +13,58 @@ public class JoseZiBot2 implements Bot {
 	private ArrayList<Integer> player2Moves = new ArrayList<Integer>();
     private ArrayList<Integer> myMoves = new ArrayList<Integer>();
     private ArrayList<Integer> myScores = new ArrayList<Integer>();
-    private int roundNum = 0;
-    private static double threshhold = 7.8;
+    private int currentRoundNum = 0; // the number of round we are in
+    private int roundsCounter = 0; // for internal use
     
+    private static double threshold = 7.75; // Defensive threshold
+    private ArrayList<Double> attackThresholds = new ArrayList<Double>();
+    
+
     private static Random generator = new Random();
 
     // Initialize a random int to stick with
     static int randomStick = generator.nextInt(12) + 1;
     
-    private boolean belowThreshhold(double myCurrentAvg){
-        if(myCurrentAvg <= threshhold){
+    private boolean belowthreshold(double myCurrentAvg){
+        if(myCurrentAvg <= threshold){
             return true;
         }
         return false;
     } 
+
+    private void addAttackThresholds(double myCurrentAvg){
+        for(double i = myCurrentAvg; i < 12; i = i + 0.2){
+            attackThresholds.add(i);
+        }
+    }
+    private double attackthreshold(double myCurrentAvg){
+        double levelOfThreshold = 0;
+        addAttackThresholds(myCurrentAvg);
+        for(int i = 0; i < attackThresholds.size() - 1; i++){
+            if(myCurrentAvg > attackThresholds.get(i)){
+                levelOfThreshold = attackThresholds.get(i);
+            }
+        }
+        // System.out.println("Current attack levelOfThreshold " + levelOfThreshold);
+        return levelOfThreshold;
+    } 
     
     // Detected whether we are suffering sandwich attack
     private boolean sandwiched(int player1LastMove, int player2LastMove){
+        int myLastMove = myMoves.get(currentRoundNum - 1);
+        int breadOne = player1LastMove - myLastMove;
+        int breadTwo = player2LastMove - myLastMove;
+
+        // Are we sandwiched?
+        if((breadOne == 1 || breadOne == -11) && (breadTwo == -1 || breadTwo == 11)){
+            return true;
+            //return 1; // player 1 is to our right, player 2 is to our left
+        }
+
+        if((breadTwo == 1 || breadTwo == -11) && (breadOne == -1 || breadOne == 11)){
+            return true;
+            //return 2;  // player 2 is to our right
+        }
         return false;
     }
 
@@ -72,17 +107,17 @@ public class JoseZiBot2 implements Bot {
 
     public Double myAvgScore(int lastNumOfRounds){
         
-        if(roundNum <= lastNumOfRounds){
-            lastNumOfRounds = roundNum;
-        }
+        // if(currentRoundNum <= lastNumOfRounds){
+        //     lastNumOfRounds = currentRoundNum;
+        // }
         
         int totalScore = 0;
         Double myAvgScore = 0.0;
-        for(int i = roundNum; i >= roundNum - lastNumOfRounds; i--){
+        for(int i = currentRoundNum - 1; i > currentRoundNum - lastNumOfRounds; i--){
             totalScore = totalScore + myScores.get(i);
         }
 
-        System.out.println("My avg score over the last" + lastNumOfRounds + " is : " + myAvgScore);
+        myAvgScore = (double) totalScore/lastNumOfRounds;
         return myAvgScore;
     }
 
@@ -99,24 +134,93 @@ public class JoseZiBot2 implements Bot {
     public int getNextMove(int player1LastMove, int player2LastMove) {
         player1Moves.add(player1LastMove);
         player2Moves.add(player2LastMove);
-        roundNum++;
+        int numRoundsCheck = 400; // check, we stay at one place during the first 400 turns.
 
-        int lastRoundScore = scoreRound(this.myMoves.get(this.myMoves.size()-1), player1LastMove, player2LastMove);
-        myScores.add(lastRoundScore);
+        if(this.myMoves.size() > 0){
+            int lastRoundScore = scoreRound(this.myMoves.get(this.myMoves.size()-1), player1LastMove, player2LastMove);
+            // System.out.println("My score last round is " + lastRoundScore);
+            myScores.add(lastRoundScore);
+        }
+        
+        Double myCurrentAvg = 0.0;
 
-        // Avg utility over the last 200 rounds
-        Double myCurrentAvg = myAvgScore(200); 
-
-        // Defensive mechanism
-        if(belowThreshhold(myCurrentAvg) || sandwiched(player1LastMove, player2LastMove)){
-            randomStick = generator.nextInt(12) + 1;
+        // Defense Mechanism #1 - bad luck
+        // Start calculating avg ultility once we have more than 400 records, ensure no overcalculating
+        if((currentRoundNum % numRoundsCheck == 0) && roundsCounter > numRoundsCheck){       
+            // Avg utility over the last 100 rounds
+            myCurrentAvg = myAvgScore(numRoundsCheck); 
+            // Defensive mechanism
+            if(belowthreshold(myCurrentAvg)){
+                int nextRandomStick = generator.nextInt(12) + 1; // Change stick number
+                if(randomStick != nextRandomStick){
+                    randomStick = nextRandomStick;
+                }
+                roundsCounter = 0;
+            }
         }
 
-        System.out.println("The current stick is " + randomStick);
-        
+        // Defense Mechanism #2 - sandwiched
+            // -1: no sandwich; 1: player 1 is to our right; 2; player 2 is to our right
+            // int sandwich = sandwiched(player1LastMove, player2LastMove);
+        // Different than the first mechanism, as soon as a sandwich happens after 100 rounds, we panick
+        if((currentRoundNum > numRoundsCheck) && (sandwiched(player1LastMove, player2LastMove))){
+            // System.out.println("Warning: We are being sandwiched!");
+
+            if(generator.nextDouble() >= 0.5){
+                int nextRandomStick = generator.nextInt(12) + 1; // Change stick number
+                if(randomStick != nextRandomStick){
+                    randomStick = nextRandomStick;
+                }
+            }
+            // // Counter sandwich - Attack!
+            // else{
+            //     // Counter sandwich player 1
+            //     if(generator.nextDouble() >= 0.5){
+            //         if(sandwich == 1){ // player 1 is to my right
+            //             int playerOne = (player1LastMove % 12) + 1;
+            //             randomStick = playerOne + 1;
+            //         }
+            //         else{
+            //             int playerOne = (player1LastMove % 12) - 1;
+            //             randomStick = playerOne - 1;
+            //         }
+            //     }
+            //     // Counter sandwich player 2
+            //     else{
+            //         randomStick = player2LastMove + 1;
+            //     }
+            // }
+
+            roundsCounter = 0;
+        }
+
+        // Attack Mechanism #1 - checking for possible marginal increments every 800 rounds 
+        if((currentRoundNum % (2 * numRoundsCheck) == 0) && roundsCounter > numRoundsCheck){       
+            // Avg utility over the last 100 rounds
+            myCurrentAvg = myAvgScore(numRoundsCheck); 
+            // attack mechanism
+            if(attackthreshold(myCurrentAvg) != 12){
+
+                // Change stick number if not too satisfied with current, as myCurrentAvg gets better, we are less likely to make moves
+                if((generator.nextDouble() * myCurrentAvg) / 10 <= 0.33){ 
+                    int nextRandomStick = generator.nextInt(12) + 1; 
+                    if(randomStick != nextRandomStick){
+                        randomStick = nextRandomStick;
+                    }
+                    roundsCounter = 0;
+                }
+            }
+        }
+
+        currentRoundNum++;
+        roundsCounter++;
+
+        // System.out.println("My avg score over the last 400 rounds is : " + myCurrentAvg);
+        // System.out.println("The round is " + currentRoundNum + " with the current stick is " + randomStick);  
         myMoves.add(randomStick);
-        
         return randomStick;
+
+        // System.out.println("player 1 made # moves: " + player1Moves.size());
     }
     
 }
