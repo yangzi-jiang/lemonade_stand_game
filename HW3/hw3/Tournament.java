@@ -6,6 +6,9 @@
   */
 public class Tournament {
  
+    public static HashMap<Integer,Integer> player1Moves = new HashMap< Integer, Integer>();
+    public static HashMap<Integer,Integer> player2Moves = new HashMap< Integer, Integer>();
+    public static HashMap<Integer,Integer> player3Moves = new HashMap< Integer, Integer>();
     public static void main(String[] args) {
         if (args.length != 4) {
             System.out.print("Usage: java Tournament <player1> <player2> ");
@@ -47,8 +50,12 @@ public class Tournament {
         
         // Run tournament
         Arbiter judge = new Arbiter(players[0], players[1], players[2]);
-        for (int i = 0; i < numRounds; i++)
+        for (int i = 0; i < numRounds; i++){
             judge.runRound();
+            int[] lastRound = judge.getLastRound();
+            System.out.println(lastRound[0]);
+        }
+            
         
         // Print mean scores
         int[] scores = judge.getCurrentScore();

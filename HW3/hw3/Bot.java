@@ -8,5 +8,4 @@ public interface Bot {
     
     /** Returns the next action that this bot will take. */
     public int getNextMove(int player1LastMove, int player2LastMove);
-    
 }
