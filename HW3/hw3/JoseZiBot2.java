@@ -166,7 +166,7 @@ public class JoseZiBot2 implements Bot {
         if((currentRoundNum > numRoundsCheck) && (sandwiched(player1LastMove, player2LastMove))){
             // System.out.println("Warning: We are being sandwiched!");
 
-            if(generator.nextDouble() >= 0.5){
+            if(generator.nextDouble() >= 0.75){
                 int nextRandomStick = generator.nextInt(12) + 1; // Change stick number
                 if(randomStick != nextRandomStick){
                     randomStick = nextRandomStick;
@@ -194,15 +194,16 @@ public class JoseZiBot2 implements Bot {
             roundsCounter = 0;
         }
 
-        // Attack Mechanism #1 - checking for possible marginal increments every 800 rounds 
-        if((currentRoundNum % (2 * numRoundsCheck) == 0) && roundsCounter > numRoundsCheck){       
+        // Attack Mechanism #1 - checking for possible marginal increments every 400 rounds 
+        if((currentRoundNum % numRoundsCheck) == 0 && roundsCounter > numRoundsCheck){       
             // Avg utility over the last 100 rounds
             myCurrentAvg = myAvgScore(numRoundsCheck); 
             // attack mechanism
-            if(attackthreshold(myCurrentAvg) != 12){
+            if(attackthreshold(myCurrentAvg) < 11){
 
-                // Change stick number if not too satisfied with current, as myCurrentAvg gets better, we are less likely to make moves
-                if((generator.nextDouble() * myCurrentAvg) / 10 <= 0.33){ 
+                // Change stick number if not too satisfied with current, but as 
+                // myCurrentAvg gets better, we are less likely to make moves, because of this inverse function
+                if((generator.nextDouble() / (myCurrentAvg - 7.75)) / 10 >= 0.28){ // 66% at myCurrentAvg = 8.0
                     int nextRandomStick = generator.nextInt(12) + 1; 
                     if(randomStick != nextRandomStick){
                         randomStick = nextRandomStick;
