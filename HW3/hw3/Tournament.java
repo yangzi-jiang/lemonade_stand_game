@@ -1,4 +1,7 @@
 import java.util.HashMap;
+
+import jdk.jfr.Threshold;
+
 import java.util.*;
 
 /** Program that runs a Lemonade Stand tournament between the three named
@@ -7,7 +10,6 @@ import java.util.*;
   * @author RR
   */
 public class Tournament {
-
 	
 	public static HashMap<Integer, Integer> player1Moves = new HashMap<Integer, Integer>(); 
 	public static HashMap<Integer, Integer> player2Moves = new HashMap<Integer, Integer>();
@@ -54,23 +56,30 @@ public class Tournament {
         
         // Run tournament
         Arbiter judge = new Arbiter(players[0], players[1], players[2]);
+
+        // JoseZiBot
+        int whoAmI = 0;
+        for (int i = 0; i < numRounds; i++){
+            if(args[i] == "JoseZiBot.java"){
+                whoAmI = i; // Player 0, 1, or 2
+            }
+        }
+
         for (int i = 0; i < numRounds; i++){
             judge.runRound();
-            int[] lastRound = judge.getLastRound();
-            System.out.println(lastRound[0]);
-            player1Moves.put(i, lastRound[0]);
-            player2Moves.put(i, lastRound[1]);
-            player3Moves.put(i, lastRound[2]);
-        	System.out.println("player 1 last moves are: " + lastRound[0]);
-        	System.out.println("player 2 last moves are: " + lastRound[1]);
-        	System.out.println("player 3 last moves are: " + lastRound[2]);
+
+            // System.out.println(lastRound[0]);
+            // player1Moves.put(i, lastRound[0]);
+            // player2Moves.put(i, lastRound[1]);
+            // player3Moves.put(i, lastRound[2]);
+        	// System.out.println("player 1 last moves are: " + lastRound[0]);
+        	// System.out.println("player 2 last moves are: " + lastRound[1]);
+        	// System.out.println("player 3 last moves are: " + lastRound[2]);
         }
             
 
-        
-        System.out.println("player 1 should made 1000 moves: " + player1Moves.size());
-        System.out.println("player 2 should made 1000 moves: " + player2Moves.size());
-        System.out.println("player 3 should made 1000 moves: " + player3Moves.size());
+    
+        System.out.println("player 1 made # moves: " + player1Moves.size());
         	
         // Print mean scores
         int[] scores = judge.getCurrentScore();

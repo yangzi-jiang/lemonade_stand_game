@@ -17,7 +17,5 @@ public class SixOClockBot implements Bot {
     public int getNextMove(int player1LastMove, int player2LastMove) {
         return 6;
     }
-    
-    public main
 }
 
