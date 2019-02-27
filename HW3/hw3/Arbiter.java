@@ -74,7 +74,7 @@ public class Arbiter {
             return score;
         }
     }
-    
+
     /** Plays a single round between players 1, 2 and 3. */
     public void runRound() {
         int[] actions = new int[3];
