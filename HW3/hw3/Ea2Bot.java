@@ -8,7 +8,8 @@ import java.math.*;
   * @author Jose Balcazar and Yangzi Jiang
   */
 public class Ea2Bot implements Bot {
-  
+    
+    public int N=3; // Number of players in game
     /** Returns an action according to the mixed strategy that picks among 
       * actions uniformly at random.
       * 
@@ -83,8 +84,12 @@ public class Ea2Bot implements Bot {
         for (int l=2; l<currentRoundNum; l++){
           denom = y^(currentRoundNum-l) + denom;
         }
-        int oppositeLoc = getOppositeLoc(Tournament.player2Moves.get(k-1));
-        int mininimumDistance = calcMinDistance(Tournament.player1Moves.get(k),oppositeLoc);  
+        int oppositeLoc2 = getOppositeLoc(Tournament.player2Moves.get(k-1));
+        int oppositeLoc3 = getOppositeLoc(Tournament.player3Moves.get(k-1));
+        int minimumDistance2 = calcMinDistance(Tournament.player1Moves.get(k),oppositeLoc2);  
+        int minimumDistance3 = calcMinDistance(Tournament.player1Moves.get(k),oppositeLoc3);   
+        minimumDistance= Math.min(minimumDistance2, minimumDistance3);
+        
         followIndex= followIndex + (num/denom) * mininimumDistance;
       }
 
