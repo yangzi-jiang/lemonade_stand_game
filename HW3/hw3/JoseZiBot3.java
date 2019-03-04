@@ -7,7 +7,7 @@ import java.util.*;
   * 
   * @author RR
   */
-public class JoseZiBot2 implements Bot {
+public class JoseZiBot3 implements Bot {
 
     private ArrayList<Integer> player1Moves = new ArrayList<Integer>(); 
 	private ArrayList<Integer> player2Moves = new ArrayList<Integer>();
