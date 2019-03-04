@@ -1,8 +1,13 @@
 import java.util.HashMap;
-
 import jdk.jfr.Threshold;
-
 import java.util.*;
+
+import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 /** Program that runs a Lemonade Stand tournament between the three named
   * players.
@@ -11,7 +16,7 @@ import java.util.*;
   */
 public class Tournament {
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
         if (args.length != 4) {
             System.out.print("Usage: java Tournament <player1> <player2> ");
             System.out.println("<player3> <n>");
@@ -55,11 +60,38 @@ public class Tournament {
 
         for (int i = 0; i < numRounds; i++)
             judge.runRound();
-        	
+            
+       
+
         // Print mean scores
         int[] scores = judge.getCurrentScore();
         for (int i = 0; i < 3; i++)
             System.out.println(args[i] + ": " + (scores[i]/(double)numRounds));
+
+        // Print out all moves and scores
+        PrintWriter pw = new PrintWriter(new File("/Users/yangzijiang/Desktop/LemonadeStandGame4.csv"));
+		StringBuilder sb = new StringBuilder();
+        
+        sb.append("My Moves, My Scores, Player1 Moves, Player1 Scores, Player2 Moves, Player2 Scores" + '\n');
+        for(int i =0; i< JoseZiBot3.myMoves.size(); i++){
+            System.out.println(JoseZiBot3.myMoves.get(i));
+            sb.append(JoseZiBot3.myMoves.get(i));
+            sb.append(',');
+            sb.append(JoseZiBot3.myScores.get(i));
+            sb.append(',');
+            sb.append(JoseZiBotDef.myMoves.get(i));
+            sb.append(',');
+            sb.append(JoseZiBotDef.myScores.get(i));
+            sb.append(',');
+            sb.append(JoseZiBotDef100.myMoves.get(i));
+            sb.append(',');
+            sb.append(JoseZiBotDef100.myScores.get(i));
+            sb.append('\n');
+        }
+        sb.append('\n');
+
+		pw.write(sb.toString());
+		pw.close();
     }
     
 }

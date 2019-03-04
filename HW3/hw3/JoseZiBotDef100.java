@@ -7,7 +7,7 @@ import java.util.*;
   * 
   * @author RR
   */
-public class JoseZiBotDef implements Bot {
+public class JoseZiBotDef100 implements Bot {
 
     public static ArrayList<Integer> player1Moves = new ArrayList<Integer>(); 
     public static ArrayList<Integer> player2Moves = new ArrayList<Integer>();
@@ -89,7 +89,7 @@ public class JoseZiBotDef implements Bot {
     public int getNextMove(int player1LastMove, int player2LastMove) {
         player1Moves.add(player1LastMove);
         player2Moves.add(player2LastMove);
-        int numRoundsCheck = 400; // check, we stay at one place during the first 400 turns.
+        int numRoundsCheck = 100; // check, we stay at one place during the first 100 turns.
 
         if(this.myMoves.size() > 0){
             int lastRoundScore = scoreRound(this.myMoves.get(this.myMoves.size()-1), player1LastMove, player2LastMove);
@@ -102,7 +102,7 @@ public class JoseZiBotDef implements Bot {
         // Defense Mechanism #1 - bad luck
         // Start calculating avg ultility once we have more than 400 records, ensure no overcalculating
         if((currentRoundNum % numRoundsCheck == 0) && roundsCounter > numRoundsCheck){       
-            // Avg utility over the last 400 rounds
+            // Avg utility over the last 100 rounds
             myCurrentAvg = myAvgScore(numRoundsCheck); 
             // Defensive mechanism
             if(belowthreshold(myCurrentAvg)){

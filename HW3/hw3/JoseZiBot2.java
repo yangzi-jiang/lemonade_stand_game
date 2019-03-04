@@ -7,12 +7,12 @@ import java.util.*;
   * 
   * @author RR
   */
-public class JoseZiBot3 implements Bot {
+public class JoseZiBot2 implements Bot {
 
-    public static ArrayList<Integer> player1Moves = new ArrayList<Integer>(); 
-	public static ArrayList<Integer> player2Moves = new ArrayList<Integer>();
-    public static ArrayList<Integer> myMoves = new ArrayList<Integer>();
-    public static ArrayList<Integer> myScores = new ArrayList<Integer>();
+    private ArrayList<Integer> player1Moves = new ArrayList<Integer>(); 
+	private ArrayList<Integer> player2Moves = new ArrayList<Integer>();
+    private ArrayList<Integer> myMoves = new ArrayList<Integer>();
+    private ArrayList<Integer> myScores = new ArrayList<Integer>();
     private int currentRoundNum = 0; // the number of round we are in
     private int roundsCounter = 0; // for internal use
     
@@ -57,20 +57,23 @@ public class JoseZiBot3 implements Bot {
 
         // Are we sandwiched?
         if((breadOne == 1 || breadOne == -11) && (breadTwo == -1 || breadTwo == 11)){
-            System.out.println("Player 1 is at " + player1LastMove);
-            System.out.println("Player 2 is at " + player2LastMove);
             return true;
             //return 1; // player 1 is to our right, player 2 is to our left
         }
 
         if((breadTwo == 1 || breadTwo == -11) && (breadOne == -1 || breadOne == 11)){
-            System.out.println("Player 1 is at " + player1LastMove);
-            System.out.println("Player 2 is at " + player2LastMove);
             return true;
             //return 2;  // player 2 is to our right
         }
         return false;
     }
+
+    /*
+        for (int i = 0; i < numRounds; i++){
+            if(args[i] == "JoseZiBot.java"){}
+            int whichPlayerAreWe = i; // Player 0, 1, or 2
+        }
+    */
 
     /** Scores the current round from the perspective of the first player.
       * 
@@ -133,8 +136,8 @@ public class JoseZiBot3 implements Bot {
         player2Moves.add(player2LastMove);
         int numRoundsCheck = 400; // check, we stay at one place during the first 400 turns.
 
-        if(myMoves.size() > 0){
-            int lastRoundScore = scoreRound(myMoves.get(myMoves.size()-1), player1LastMove, player2LastMove);
+        if(this.myMoves.size() > 0){
+            int lastRoundScore = scoreRound(this.myMoves.get(this.myMoves.size()-1), player1LastMove, player2LastMove);
             // System.out.println("My score last round is " + lastRoundScore);
             myScores.add(lastRoundScore);
         }
@@ -144,7 +147,7 @@ public class JoseZiBot3 implements Bot {
         // Defense Mechanism #1 - bad luck
         // Start calculating avg ultility once we have more than 400 records, ensure no overcalculating
         if((currentRoundNum % numRoundsCheck == 0) && roundsCounter > numRoundsCheck){       
-            // Avg utility over the last 400 rounds
+            // Avg utility over the last 100 rounds
             myCurrentAvg = myAvgScore(numRoundsCheck); 
             // Defensive mechanism
             if(belowthreshold(myCurrentAvg)){
@@ -161,29 +164,15 @@ public class JoseZiBot3 implements Bot {
             // int sandwich = sandwiched(player1LastMove, player2LastMove);
         // Different than the first mechanism, as soon as a sandwich happens after 100 rounds, we panick
         if((currentRoundNum > numRoundsCheck) && (sandwiched(player1LastMove, player2LastMove))){
-            System.out.println("Warning: We are being sandwiched!");
-            double rand = generator.nextDouble();
-            if(rand >= 0.75){
+            // System.out.println("Warning: We are being sandwiched!");
+
+            if(generator.nextDouble() >= 0.75){
                 int nextRandomStick = generator.nextInt(12) + 1; // Change stick number
                 if(randomStick != nextRandomStick){
                     randomStick = nextRandomStick;
                 }
             }
-            // Counter sandwich - hard
-            else if(rand <= 0.4){
-                System.out.println("Player 1 is at " + player1LastMove);
-                System.out.println("Player 2 is at " + player2LastMove);
-                randomStick = (myMoves.get(myMoves.size()-1) + 2) % 12; // System.out.println("Player 1 is at " + player1LastMove);
-                System.out.println("My next move is at " + randomStick);
-            }
-            // Counter sandwich - soft
-            else{
-                System.out.println("Player 1 is at " + player1LastMove);
-                System.out.println("Player 2 is at " + player2LastMove);
-                randomStick = (myMoves.get(myMoves.size()-1) + 3) % 12; // 
-                System.out.println("My next move is at " + randomStick);
-            }
-
+            // // Counter sandwich - Attack!
             // else{
             //     // Counter sandwich player 1
             //     if(generator.nextDouble() >= 0.5){
