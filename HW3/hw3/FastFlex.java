@@ -15,7 +15,7 @@ public class FastFlex implements Bot {
     public static ArrayList<Integer> myScores = new ArrayList<Integer>();
     private int currentRoundNum = 0; // the number of round we are in
 
-    int numRoundsCheck = 50; // check per numRoundsCheck
+    int numRoundsCheck = 20; // check per numRoundsCheck
 
     private boolean repositioned = false;
     private int myPreviousStick = 0;
@@ -108,35 +108,41 @@ public class FastFlex implements Bot {
         }
         
         // Change macro parameter, how often we check based on our performances
-        if(currentRoundNum % 20000 == 0 && currentRoundNum > 1){
-            double totalAvg = myAvgScore(20000);
-            if(totalAvg < 7.50){
-                numRoundsCheck = numRoundsCheck * 5;
+        if(currentRoundNum % 10000 == 0 && currentRoundNum > 1 && numRoundsCheck < 2000){
+            double totalAvg = myAvgScore(10000);
+            if(totalAvg < 7.65){
+                numRoundsCheck = numRoundsCheck * 3;
             }
-            if(totalAvg < 7.00){
-                numRoundsCheck = numRoundsCheck * 5;
+            if(totalAvg < 7.30){
+                numRoundsCheck = numRoundsCheck * 3;
             }
-            if(totalAvg < 6.50){
-                numRoundsCheck = numRoundsCheck * 5;
+            if(totalAvg < 6.95){
+                numRoundsCheck = numRoundsCheck * 3;
             }
-            if(numRoundsCheck > 100000){
-                numRoundsCheck = 100000;
+            if(totalAvg < 6.60){
+                numRoundsCheck = numRoundsCheck * 3;
+            }
+            if(numRoundsCheck > 5000){
+                numRoundsCheck = 5000;
             }
             // System.out.println("num rounds check is: " + numRoundsCheck);
         }
-        else if(currentRoundNum % 50000 == 0 && currentRoundNum > 1){
-            double totalAvg = myAvgScore(20000);
-            if(totalAvg < 7.50){
-                numRoundsCheck = numRoundsCheck / 5;
+        else if(currentRoundNum % 20000 == 0 && currentRoundNum > 1 && numRoundsCheck > 20){
+            double totalAvg = myAvgScore(10000);
+            if(totalAvg < 7.65){
+                numRoundsCheck = numRoundsCheck / 4;
             }
-            if(totalAvg < 7.00){
-                numRoundsCheck = numRoundsCheck / 5;
+            if(totalAvg < 7.30){
+                numRoundsCheck = numRoundsCheck / 4;
             }
-            if(totalAvg < 6.50){
-                numRoundsCheck = numRoundsCheck / 5;
+            if(totalAvg < 6.95){
+                numRoundsCheck = numRoundsCheck / 4;
             }
-            if(numRoundsCheck < 3){
-                numRoundsCheck = 3;
+            if(totalAvg < 6.60){
+                numRoundsCheck = numRoundsCheck / 4;
+            }
+            if(numRoundsCheck < 2){
+                numRoundsCheck = 2;
             }
             // System.out.println("num rounds check is: " + numRoundsCheck);
         }

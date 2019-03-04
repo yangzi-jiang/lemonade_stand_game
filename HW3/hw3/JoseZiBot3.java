@@ -100,7 +100,7 @@ public class JoseZiBot3 implements Bot {
         player1Moves.add(player1LastMove);
         player2Moves.add(player2LastMove);
 
-        int numRoundsCheck = 50; // check, we stay at one place during the first 400 turns.
+        int numRoundsCheck = 20; // check, we stay at one place during the first 400 turns.
 
         if(myMoves.size() > 0){
             int lastRoundScore = scoreRound(myMoves.get(myMoves.size()-1), player1LastMove, player2LastMove);
