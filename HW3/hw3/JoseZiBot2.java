@@ -57,11 +57,15 @@ public class JoseZiBot2 implements Bot {
 
         // Are we sandwiched?
         if((breadOne == 1 || breadOne == -11) && (breadTwo == -1 || breadTwo == 11)){
+            System.out.println("Player 1 is at " + player1LastMove);
+            System.out.println("Player 2 is at " + player2LastMove);
             return true;
             //return 1; // player 1 is to our right, player 2 is to our left
         }
 
         if((breadTwo == 1 || breadTwo == -11) && (breadOne == -1 || breadOne == 11)){
+            System.out.println("Player 1 is at " + player1LastMove);
+            System.out.println("Player 2 is at " + player2LastMove);
             return true;
             //return 2;  // player 2 is to our right
         }
@@ -164,15 +168,28 @@ public class JoseZiBot2 implements Bot {
             // int sandwich = sandwiched(player1LastMove, player2LastMove);
         // Different than the first mechanism, as soon as a sandwich happens after 100 rounds, we panick
         if((currentRoundNum > numRoundsCheck) && (sandwiched(player1LastMove, player2LastMove))){
-            // System.out.println("Warning: We are being sandwiched!");
-
-            if(generator.nextDouble() >= 0.75){
+            System.out.println("Warning: We are being sandwiched!");
+            double rand = generator.nextDouble();
+            if(rand >= 0.75){
                 int nextRandomStick = generator.nextInt(12) + 1; // Change stick number
                 if(randomStick != nextRandomStick){
                     randomStick = nextRandomStick;
                 }
             }
-            // // Counter sandwich - Attack!
+            // Counter sandwich - hard
+            else if(rand <= 0.4){
+                System.out.println("Player 1 is at " + player1LastMove);
+                System.out.println("Player 2 is at " + player2LastMove);
+                randomStick = (this.myMoves.get(this.myMoves.size()-1) + 2) % 12; // System.out.println("Player 1 is at " + player1LastMove);
+                System.out.println("My next move is at " + randomStick);
+            }
+            else{
+                System.out.println("Player 1 is at " + player1LastMove);
+                System.out.println("Player 2 is at " + player2LastMove);
+                randomStick = (this.myMoves.get(this.myMoves.size()-1) + 3) % 12; // 
+                System.out.println("My next move is at " + randomStick);
+            }
+
             // else{
             //     // Counter sandwich player 1
             //     if(generator.nextDouble() >= 0.5){
