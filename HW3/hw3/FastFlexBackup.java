@@ -7,7 +7,7 @@ import java.util.*;
   * 
   * @author RR
   */
-public class FastFlex implements Bot {
+public class FastFlexBackup implements Bot {
 
     public static ArrayList<Integer> player1Moves = new ArrayList<Integer>(); 
 	public static ArrayList<Integer> player2Moves = new ArrayList<Integer>();
@@ -108,7 +108,7 @@ public class FastFlex implements Bot {
         }
         
         // Change macro parameter, how often we check based on our performances
-        if(currentRoundNum % 10000 == 0 && currentRoundNum > 1 && numRoundsCheck < 2000){
+        if(currentRoundNum % 20000 == 0 && currentRoundNum > 1 && numRoundsCheck < 2000){
             double totalAvg = myAvgScore(10000);
             if(totalAvg < 7.65){
                 numRoundsCheck = numRoundsCheck * 3;
@@ -197,10 +197,10 @@ public class FastFlex implements Bot {
             }
         }
 
-        // Thresholds - checking for possible marginal increments every 20 rounds 
+        // Thresholds - checking for possible marginal increments every 50 rounds 
         if((currentRoundNum % numRoundsCheck) == 0 && currentRoundNum > 1000){       
             // Avg utility over the last 100 rounds
-            myCurrentAvg = myAvgScore(2 * numRoundsCheck);
+            myCurrentAvg = myAvgScore(numRoundsCheck);
 
             // Don't move if payoff is at 11
             if(myCurrentAvg < 11){
