@@ -111,13 +111,13 @@ public class FastFlex implements Bot {
         if(currentRoundNum % 20000 == 0 && currentRoundNum > 1){
             double totalAvg = myAvgScore(20000);
             if(totalAvg < 7.50){
-                numRoundsCheck = numRoundsCheck * 3;
+                numRoundsCheck = numRoundsCheck * 5;
             }
             if(totalAvg < 7.00){
-                numRoundsCheck = numRoundsCheck * 3;
+                numRoundsCheck = numRoundsCheck * 5;
             }
             if(totalAvg < 6.50){
-                numRoundsCheck = numRoundsCheck * 3;
+                numRoundsCheck = numRoundsCheck * 5;
             }
             if(numRoundsCheck > 100000){
                 numRoundsCheck = 100000;
@@ -127,13 +127,13 @@ public class FastFlex implements Bot {
         else if(currentRoundNum % 50000 == 0 && currentRoundNum > 1){
             double totalAvg = myAvgScore(20000);
             if(totalAvg < 7.50){
-                numRoundsCheck = numRoundsCheck / 3;
+                numRoundsCheck = numRoundsCheck / 5;
             }
             if(totalAvg < 7.00){
-                numRoundsCheck = numRoundsCheck / 3;
+                numRoundsCheck = numRoundsCheck / 5;
             }
             if(totalAvg < 6.50){
-                numRoundsCheck = numRoundsCheck / 3;
+                numRoundsCheck = numRoundsCheck / 5;
             }
             if(numRoundsCheck < 3){
                 numRoundsCheck = 3;
