@@ -7,14 +7,15 @@ import java.util.*;
   * 
   * @author RR
   */
-public class JoseZiBot3 implements Bot {
+public class JoseZiBot5 implements Bot {
 
     public static ArrayList<Integer> player1Moves = new ArrayList<Integer>(); 
 	public static ArrayList<Integer> player2Moves = new ArrayList<Integer>();
     public static ArrayList<Integer> myMoves = new ArrayList<Integer>();
     public static ArrayList<Integer> myScores = new ArrayList<Integer>();
     private int currentRoundNum = 0; // the number of round we are in
-    private int roundsCounter = 0; // for internal use
+
+    int numRoundsCheck = 1000; // check per numRoundsCheck
 
     private boolean repositioned = false;
     private int myPreviousStick = 0;
@@ -100,14 +101,47 @@ public class JoseZiBot3 implements Bot {
         player1Moves.add(player1LastMove);
         player2Moves.add(player2LastMove);
 
-        int numRoundsCheck = 50; // check, we stay at one place during the first 400 turns.
-
         if(myMoves.size() > 0){
             int lastRoundScore = scoreRound(myMoves.get(myMoves.size()-1), player1LastMove, player2LastMove);
             // System.out.println("My score last round is " + lastRoundScore);
             myScores.add(lastRoundScore);
         }
         
+        // Change macro parameter, how often we check based on our performances
+        if(currentRoundNum % 20000 == 0 && currentRoundNum > 1){
+            double totalAvg = myAvgScore(20000);
+            if(totalAvg < 7.50){
+                numRoundsCheck = numRoundsCheck / 3;
+            }
+            if(totalAvg < 7.00){
+                numRoundsCheck = numRoundsCheck / 3;
+            }
+            if(totalAvg < 6.50){
+                numRoundsCheck = numRoundsCheck / 3;
+            }
+            if(numRoundsCheck < 3){
+                numRoundsCheck = 3;
+            }
+            System.out.println("num rounds check is: " + numRoundsCheck);
+        }
+        else if(currentRoundNum % 50000 == 0 && currentRoundNum > 1){
+            double totalAvg = myAvgScore(20000);
+            if(totalAvg < 7.50){
+                numRoundsCheck = numRoundsCheck * 3;
+            }
+            if(totalAvg < 7.00){
+                numRoundsCheck = numRoundsCheck * 3;
+            }
+            if(totalAvg < 6.50){
+                numRoundsCheck = numRoundsCheck * 3;
+            }
+            if(numRoundsCheck > 100000){
+                numRoundsCheck = 100000;
+            }
+            System.out.println("num rounds check is: " + numRoundsCheck);
+        }
+
+
         Double myCurrentAvg = 0.0;
 
         // Defense Mechanism - sandwiched
@@ -142,7 +176,6 @@ public class JoseZiBot3 implements Bot {
                 // System.out.println("My next move is at " + randomStick);
             }
 
-            roundsCounter++;
             currentRoundNum++;
             myMoves.add(randomStick);
             return randomStick;
@@ -159,7 +192,7 @@ public class JoseZiBot3 implements Bot {
         }
 
         // Thresholds - checking for possible marginal increments every 100 rounds 
-        if((currentRoundNum % numRoundsCheck) == 0 && roundsCounter > 500){       
+        if((currentRoundNum % numRoundsCheck) == 0 && currentRoundNum > 2000){       
             // Avg utility over the last 100 rounds
             myCurrentAvg = myAvgScore(numRoundsCheck);
 
@@ -183,7 +216,7 @@ public class JoseZiBot3 implements Bot {
         }
 
         // Pickup a sandwich
-        if(roundsCounter > 500){
+        if(currentRoundNum > 2000){
             if((player1LastMove - player2LastMove) == 1)
                 randomStick = player1LastMove + 1;
             if((player2LastMove - player1LastMove) == 1)
@@ -204,7 +237,6 @@ public class JoseZiBot3 implements Bot {
         // System.out.println("The round is " + currentRoundNum + " with the current stick is " + randomStick);  
         myMoves.add(randomStick);
         currentRoundNum++;
-        roundsCounter++;
         return randomStick;
     }
     

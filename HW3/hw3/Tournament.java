@@ -60,38 +60,36 @@ public class Tournament {
 
         for (int i = 0; i < numRounds; i++)
             judge.runRound();
-            
-       
 
         // Print mean scores
         int[] scores = judge.getCurrentScore();
         for (int i = 0; i < 3; i++)
             System.out.println(args[i] + ": " + (scores[i]/(double)numRounds));
 
+       
         // Print out all moves and scores
-        PrintWriter pw = new PrintWriter(new File("/Users/yangzijiang/Desktop/LemonadeStandGame4.csv"));
+        PrintWriter pw = new PrintWriter(new File("/Users/yangzijiang/Desktop/LSG.csv"));
 		StringBuilder sb = new StringBuilder();
-        
-        sb.append("My Moves, My Scores, Player1 Moves, Player1 Scores, Player2 Moves, Player2 Scores" + '\n');
-        for(int i =0; i< JoseZiBot3.myMoves.size(); i++){
-            System.out.println(JoseZiBot3.myMoves.get(i));
+       
+        sb.append("JoseZiBot3 Moves, JoseZiBot3 Scores, JoseZiBotDef Moves, JoseZiBotDef Scores, JoseZiBotDef100 Moves, JoseZiBotDef100 Scores" + '\n');
+        for(int i =0; i< JoseZiBot3.myScores.size(); i++){
             sb.append(JoseZiBot3.myMoves.get(i));
             sb.append(',');
             sb.append(JoseZiBot3.myScores.get(i));
-            sb.append(',');
-            sb.append(JoseZiBotDef.myMoves.get(i));
-            sb.append(',');
-            sb.append(JoseZiBotDef.myScores.get(i));
-            sb.append(',');
-            sb.append(JoseZiBotDef100.myMoves.get(i));
-            sb.append(',');
-            sb.append(JoseZiBotDef100.myScores.get(i));
+            // sb.append(',');
+            // sb.append(JoseZiBotDef.myMoves.get(i));
+            // sb.append(',');
+            // sb.append(JoseZiBotDef.myScores.get(i));
+            // sb.append(',');
+            // sb.append(JoseZiBotDef100.myMoves.get(i));
+            // sb.append(',');
+            // sb.append(JoseZiBotDef100.myScores.get(i));
             sb.append('\n');
         }
-        sb.append('\n');
 
 		pw.write(sb.toString());
-		pw.close();
+        pw.close();
+       
     }
     
 }

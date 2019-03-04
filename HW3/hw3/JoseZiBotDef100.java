@@ -91,8 +91,8 @@ public class JoseZiBotDef100 implements Bot {
         player2Moves.add(player2LastMove);
         int numRoundsCheck = 100; // check, we stay at one place during the first 100 turns.
 
-        if(this.myMoves.size() > 0){
-            int lastRoundScore = scoreRound(this.myMoves.get(this.myMoves.size()-1), player1LastMove, player2LastMove);
+        if(myMoves.size() > 0){
+            int lastRoundScore = scoreRound(myMoves.get(myMoves.size()-1), player1LastMove, player2LastMove);
             // System.out.println("My score last round is " + lastRoundScore);
             myScores.add(lastRoundScore);
         }

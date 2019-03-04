@@ -7,7 +7,7 @@ import java.util.*;
   * 
   * @author RR
   */
-public class JoseZiBot3 implements Bot {
+public class JoseZiBot4 implements Bot {
 
     public static ArrayList<Integer> player1Moves = new ArrayList<Integer>(); 
 	public static ArrayList<Integer> player2Moves = new ArrayList<Integer>();
@@ -100,7 +100,7 @@ public class JoseZiBot3 implements Bot {
         player1Moves.add(player1LastMove);
         player2Moves.add(player2LastMove);
 
-        int numRoundsCheck = 50; // check, we stay at one place during the first 400 turns.
+        int numRoundsCheck = 1000; // check, we stay at one place during the first 500 turns.
 
         if(myMoves.size() > 0){
             int lastRoundScore = scoreRound(myMoves.get(myMoves.size()-1), player1LastMove, player2LastMove);
@@ -149,7 +149,7 @@ public class JoseZiBot3 implements Bot {
         }
 
         // After repositioned for 5 rounds, check is reposition is better than before
-        if(repositioned && (currentRoundNum % 5) == 0){
+        if(repositioned && (currentRoundNum % 10) == 0){
             if(myScores.get(myScores.size() - 1) < myPreviousStickScore){
                 randomStick = myPreviousStick;
             }
@@ -159,7 +159,7 @@ public class JoseZiBot3 implements Bot {
         }
 
         // Thresholds - checking for possible marginal increments every 100 rounds 
-        if((currentRoundNum % numRoundsCheck) == 0 && roundsCounter > 500){       
+        if((currentRoundNum % numRoundsCheck) == 0 && roundsCounter > 2000){       
             // Avg utility over the last 100 rounds
             myCurrentAvg = myAvgScore(numRoundsCheck);
 
@@ -183,7 +183,7 @@ public class JoseZiBot3 implements Bot {
         }
 
         // Pickup a sandwich
-        if(roundsCounter > 500){
+        if(roundsCounter > 2000){
             if((player1LastMove - player2LastMove) == 1)
                 randomStick = player1LastMove + 1;
             if((player2LastMove - player1LastMove) == 1)
